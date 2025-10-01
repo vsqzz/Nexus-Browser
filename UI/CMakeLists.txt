@@ -1,15 +1,15 @@
 include(cmake/ResourceFiles.cmake)
 
-function(create_ladybird_bundle target_name)
+function(create_nexus_bundle target_name)
     set_target_properties(${target_name} PROPERTIES
-        OUTPUT_NAME "Ladybird"
-        MACOSX_BUNDLE_GUI_IDENTIFIER org.ladybird.Ladybird
+        OUTPUT_NAME "NexusBrowser"
+        MACOSX_BUNDLE_GUI_IDENTIFIER org.nexus.NexusBrowser
         MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
         MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-        MACOSX_BUNDLE_INFO_PLIST "${LADYBIRD_SOURCE_DIR}/UI/Info.plist"
+        MACOSX_BUNDLE_INFO_PLIST "${NEXUSBROWSER_SOURCE_DIR}/UI/Info.plist"
         MACOSX_BUNDLE TRUE
         WIN32_EXECUTABLE TRUE
-        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER org.ladybird.Ladybird
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER org.nexus.NexusBrowser
     )
 
     if (APPLE)
@@ -58,14 +58,14 @@ else()
     return()
 endif()
 
-if (NOT TARGET ladybird)
-    message(FATAL_ERROR "UI Framework selection must declare a ladybird target")
+if (NOT TARGET NexusBrowser)
+    message(FATAL_ERROR "UI Framework selection must declare a NexusBrowser target")
 endif()
 
-if (TARGET ladybird_impl)
-    set(LADYBIRD_TARGET ladybird_impl PUBLIC)
+if (TARGET NexusBrowser_impl)
+    set(NEXUSBROWSER_TARGET NexusBrowser_impl PUBLIC)
 else()
-    set(LADYBIRD_TARGET ladybird PRIVATE)
+    set(NEXUSBROWSER_TARGET NexusBrowser PRIVATE)
 endif()
 
 set(LADYBIRD_LIBS AK LibCore LibFileSystem LibGfx LibImageDecoderClient LibIPC LibJS LibMain LibWeb LibWebView LibWebViewPlatform LibRequests LibURL)
@@ -91,14 +91,14 @@ function(set_helper_process_properties)
 endfunction()
 
 add_custom_target(run
-    COMMAND "${CMAKE_COMMAND}" -E env "LADYBIRD_SOURCE_DIR=${LADYBIRD_SOURCE_DIR}" "$<TARGET_FILE:ladybird>" $ENV{LAGOM_ARGS}
+    COMMAND "${CMAKE_COMMAND}" -E env "NEXUSBROWSER_SOURCE_DIR=${NEXUSBROWSER_SOURCE_DIR}" "$<TARGET_FILE:NexusBrowser>" $ENV{LAGOM_ARGS}
     USES_TERMINAL
     VERBATIM
 )
 
 if (APPLE)
-    add_custom_target(debug-ladybird
-        COMMAND "${CMAKE_COMMAND}" -E env "LADYBIRD_SOURCE_DIR=${LADYBIRD_SOURCE_DIR}" lldb "$<TARGET_BUNDLE_DIR:ladybird>"
+add_custom_target(debug-nexus ...)
+COMMAND "${CMAKE_COMMAND}" -E env "LADYBIRD_SOURCE_DIR=${LADYBIRD_SOURCE_DIR}" lldb "$<TARGET_BUNDLE_DIR:ladybird>"
         USES_TERMINAL
     )
 else()
@@ -108,9 +108,9 @@ else()
     )
 endif()
 
-set(ladybird_helper_processes ImageDecoder RequestServer WebContent WebWorker)
+set(nexus_helper_processes ImageDecoder RequestServer WebContent WebWorker)
 
-add_dependencies(ladybird ${ladybird_helper_processes})
+add_dependencies(NexusBrowser ${nexus_helper_processes})
 # FIXME: Increase support for building targets on Windows
 if (NOT WIN32)
     add_dependencies(WebDriver ladybird)
